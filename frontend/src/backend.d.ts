@@ -7,10 +7,6 @@ export interface None {
     __kind__: "None";
 }
 export type Option<T> = Some<T> | None;
-export interface SpendingLimit {
-    limit: number;
-    category: string;
-}
 export interface LeaderboardEntry {
     name: string;
     user: Principal;
@@ -22,6 +18,10 @@ export interface Challenge {
     rewardPoints: bigint;
     description: string;
     targetAmount: number;
+}
+export interface SpendingLimit {
+    limit: number;
+    category: string;
 }
 export interface UserProfile {
     bankAccountNumber?: string;
@@ -63,11 +63,14 @@ export interface backendInterface {
     getSupportedCategories(): Promise<Array<string>>;
     getTransactions(category: string | null): Promise<Array<Transaction>>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
+    hasPinSet(): Promise<boolean>;
     isCallerAdmin(): Promise<boolean>;
     referUser(referredUser: Principal): Promise<void>;
     resetUserData(user: Principal): Promise<void>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
     setBankAccount(bankAccountNumber: string): Promise<void>;
     setSpendingLimit(category: string, limit: number): Promise<void>;
+    storePinHash(pinHash: string): Promise<void>;
     updateBalance(newBalance: number): Promise<void>;
+    verifyPinHash(pinHash: string): Promise<boolean>;
 }

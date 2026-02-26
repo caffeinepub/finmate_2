@@ -2,13 +2,14 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import ChatInterface from './ChatInterface';
 import { generateAnalyticsInsight } from '../utils/analyticsInsights';
-import type { Transaction } from '../backend';
+import type { Transaction, SpendingLimit } from '../backend';
 
 interface AnalyticsChatbotProps {
   transactions: Transaction[];
+  spendingLimits?: SpendingLimit[];
 }
 
-export default function AnalyticsChatbot({ transactions }: AnalyticsChatbotProps) {
+export default function AnalyticsChatbot({ transactions, spendingLimits = [] }: AnalyticsChatbotProps) {
   const [messages, setMessages] = useState<Array<{ role: 'user' | 'bot'; content: string }>>([
     {
       role: 'bot',
@@ -19,7 +20,7 @@ export default function AnalyticsChatbot({ transactions }: AnalyticsChatbotProps
   const handleSendMessage = (message: string) => {
     setMessages((prev) => [...prev, { role: 'user', content: message }]);
 
-    const response = generateAnalyticsInsight(message, transactions);
+    const response = generateAnalyticsInsight(message, transactions, spendingLimits);
     setTimeout(() => {
       setMessages((prev) => [...prev, { role: 'bot', content: response }]);
     }, 500);

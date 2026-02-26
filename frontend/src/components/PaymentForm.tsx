@@ -1,132 +1,130 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useAddTransaction } from '../hooks/useAddTransaction';
+import { useBalance } from '../hooks/useBalance';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useAddTransaction } from '../hooks/useAddTransaction';
-import { Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
+import { CATEGORIES } from '../data/categories';
 
 interface PaymentFormProps {
-  onSuccess: () => void;
   paymentMethod: string;
+  recipient?: string;
+  onSuccess?: () => void;
 }
 
-export default function PaymentForm({ onSuccess, paymentMethod }: PaymentFormProps) {
+export default function PaymentForm({ paymentMethod, recipient, onSuccess }: PaymentFormProps) {
   const [amount, setAmount] = useState('');
-  const [recipient, setRecipient] = useState('');
   const [category, setCategory] = useState('');
-  const [description, setDescription] = useState('');
-  const { mutate: addTransaction, isPending } = useAddTransaction();
+  const [description, setDescription] = useState(recipient || '');
+  const [type, setType] = useState<'debit' | 'credit'>('debit');
 
-  const categories = [
-    'grocery',
-    'hostel_expense',
-    'food',
-    'travel',
-    'personal',
-    'clothing',
-    'mobile_recharge',
-  ];
+  const addTransaction = useAddTransaction();
+  const { data: balance = 0 } = useBalance();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const numAmount = parseFloat(amount);
+    if (!numAmount || numAmount <= 0) return;
+    if (!category) return;
 
-    if (!amount || !category) {
-      toast.error('Please fill in all required fields');
-      return;
-    }
+    await addTransaction.mutateAsync({
+      amount: numAmount,
+      type,
+      category,
+      description: description || `${type === 'debit' ? 'Payment' : 'Receipt'} via ${paymentMethod}`,
+      paymentMethod,
+      timestamp: BigInt(Date.now()) * BigInt(1_000_000),
+    });
 
-    addTransaction(
-      {
-        amount: parseFloat(amount),
-        type: 'debit',
-        category,
-        timestamp: BigInt(Date.now() * 1000000),
-        description: description || `Payment to ${recipient || 'recipient'}`,
-        paymentMethod,
-      },
-      {
-        onSuccess: () => {
-          toast.success('Payment successful!');
-          onSuccess();
-        },
-        onError: () => {
-          toast.error('Payment failed. Please try again.');
-        },
-      }
-    );
+    setAmount('');
+    setCategory('');
+    setDescription('');
+    onSuccess?.();
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 pt-4">
-      {paymentMethod === 'phone' && (
-        <div className="space-y-2">
-          <Label htmlFor="recipient">Phone Number</Label>
-          <Input
-            id="recipient"
-            type="tel"
-            placeholder="Enter phone number"
-            value={recipient}
-            onChange={(e) => setRecipient(e.target.value)}
-            disabled={isPending}
-          />
-        </div>
-      )}
+    <form onSubmit={handleSubmit} className="space-y-4 p-4">
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={() => setType('debit')}
+          className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all ${
+            type === 'debit'
+              ? 'bg-red-500 text-white'
+              : 'bg-muted text-muted-foreground'
+          }`}
+        >
+          💸 Debit
+        </button>
+        <button
+          type="button"
+          onClick={() => setType('credit')}
+          className={`flex-1 py-2 rounded-xl text-sm font-medium transition-all ${
+            type === 'credit'
+              ? 'bg-green-500 text-white'
+              : 'bg-muted text-muted-foreground'
+          }`}
+        >
+          💰 Credit
+        </button>
+      </div>
 
-      <div className="space-y-2">
+      <div>
         <Label htmlFor="amount">Amount (₹)</Label>
         <Input
           id="amount"
           type="number"
-          step="0.01"
           placeholder="0.00"
           value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          disabled={isPending}
+          onChange={e => setAmount(e.target.value)}
+          min="0"
+          step="0.01"
           required
+          className="mt-1"
         />
+        {type === 'debit' && balance > 0 && (
+          <p className="text-xs text-muted-foreground mt-1">Available: ₹{balance.toFixed(2)}</p>
+        )}
       </div>
 
-      <div className="space-y-2">
+      <div>
         <Label htmlFor="category">Category</Label>
-        <Select value={category} onValueChange={setCategory} disabled={isPending}>
-          <SelectTrigger>
+        <Select value={category} onValueChange={setCategory} required>
+          <SelectTrigger id="category" className="mt-1">
             <SelectValue placeholder="Select category" />
           </SelectTrigger>
           <SelectContent>
-            {categories.map((cat) => (
-              <SelectItem key={cat} value={cat}>
-                {cat.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
-              </SelectItem>
+            {CATEGORIES.map(cat => (
+              <SelectItem key={cat} value={cat}>{cat}</SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="description">Description (Optional)</Label>
+      <div>
+        <Label htmlFor="description">Description</Label>
         <Input
           id="description"
           placeholder="What's this for?"
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          disabled={isPending}
+          onChange={e => setDescription(e.target.value)}
+          className="mt-1"
         />
       </div>
 
       <Button
         type="submit"
-        disabled={isPending}
-        className="w-full bg-gradient-to-r from-[oklch(0.55_0.18_280)] to-[oklch(0.45_0.15_260)] hover:from-[oklch(0.60_0.20_280)] hover:to-[oklch(0.50_0.17_260)] text-white"
+        disabled={addTransaction.isPending || !amount || !category}
+        className="w-full bg-gradient-to-r from-primary to-secondary text-white"
       >
-        {isPending ? (
-          <>
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+        {addTransaction.isPending ? (
+          <span className="flex items-center gap-2">
+            <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             Processing...
-          </>
+          </span>
         ) : (
-          `Pay ₹${amount || '0.00'}`
+          `${type === 'debit' ? 'Pay' : 'Add'} ₹${amount || '0'}`
         )}
       </Button>
     </form>

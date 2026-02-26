@@ -2,10 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-create-a-banklinkingpage-component-at-frontend-src-pages-banklinkingpage-tsx-with-a-form-to-input-and-submit-a-bank-account-number",
-      "featureTitle": "Create a BankLinkingPage component at frontend/src/pages/BankLinkingPage.tsx with a form to input and submit a bank account number",
+      "featureId": "feature-remove-the-bankbalancecard-component-from-the-home-page-frontend-src-pages-homepage-tsx-in-its-place-render-a-horizontally-scrollable-promotional-ads-banners-carousel-with-cards-covering-topics-such-as-budgeting-tips-personal-loans-mutual-fund-investments-credit-score-improvement-and-student-savings-plans-each-ad-card-should-display-a-title-a-short-description-a-relevant-icon-or-illustration-a-cta-button-label-e-g-learn-more-apply-now-and-use-the-existing-purple-blue-theme-with-gradient-backgrounds-the-carousel-should-auto-scroll-every-4-seconds-and-support-manual-swipe-click-navigation-with-dot-indicators",
+      "featureTitle": "Remove the BankBalanceCard component from the Home page (frontend/src/pages/HomePage.tsx). In its place, render a horizontally scrollable promotional ads/banners carousel with cards covering topics such as Budgeting Tips, Personal Loans, Mutual Fund Investments, Credit Score Improvement, and Student Savings Plans. Each ad card should display a title, a short description, a relevant icon or illustration, a CTA button label (e.g., 'Learn More', 'Apply Now'), and use the existing purple-blue theme with gradient backgrounds. The carousel should auto-scroll every 4 seconds and support manual swipe/click navigation with dot indicators.",
       "files": [
-        "frontend/src/pages/BankLinkingPage.tsx"
+        "frontend/src/components/PromotionalAdsCarousel.tsx",
+        "frontend/src/pages/HomePage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -13,18 +14,22 @@
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-21"
+        "REQ-37"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-a-custom-hook-usesetbankaccount-at-frontend-src-hooks-usesetbankaccount-ts-that-wraps-the-backend-setbankaccount-function-as-a-react-query-mutation",
-      "featureTitle": "Create a custom hook useSetBankAccount at frontend/src/hooks/useSetBankAccount.ts that wraps the backend setBankAccount function as a React Query mutation",
+      "featureId": "feature-add-a-check-balance-button-on-the-home-page-frontend-src-pages-homepage-tsx-that-when-tapped-opens-a-pin-verification-modal-the-modal-should-display-a-6-digit-pin-input-masked-on-correct-pin-entry-validate-against-a-pin-stored-in-localstorage-or-the-backend-user-profile-reveal-the-bank-balance-in-a-compact-card-overlay-or-inline-section-after-3-consecutive-incorrect-pin-attempts-lock-the-modal-for-30-seconds-and-show-an-error-message-the-backend-should-expose-a-function-to-store-and-verify-the-pin-hash-or-use-a-localstorage-based-pin-for-client-side-verification-as-a-fallback",
+      "featureTitle": "Add a 'Check Balance' button on the Home page (frontend/src/pages/HomePage.tsx) that, when tapped, opens a PIN verification modal. The modal should display a 6-digit PIN input (masked). On correct PIN entry (validate against a PIN stored in localStorage or the backend user profile), reveal the bank balance in a compact card overlay or inline section. After 3 consecutive incorrect PIN attempts, lock the modal for 30 seconds and show an error message. The backend should expose a function to store and verify the PIN hash, or use a localStorage-based PIN for client-side verification as a fallback.",
       "files": [
-        "frontend/src/hooks/useSetBankAccount.ts"
+        "frontend/src/components/BalanceRevealCard.tsx",
+        "frontend/src/components/PinVerificationModal.tsx",
+        "frontend/src/hooks/usePinVerification.ts",
+        "frontend/src/pages/HomePage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -32,18 +37,20 @@
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-22"
+        "REQ-38"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-a-custom-hook-usegetbankaccount-at-frontend-src-hooks-usegetbankaccount-ts-that-fetches-the-linked-bank-account-number-using-react-query",
-      "featureTitle": "Create a custom hook useGetBankAccount at frontend/src/hooks/useGetBankAccount.ts that fetches the linked bank account number using React Query",
+      "featureId": "feature-add-a-spending-limits-summary-section-on-the-home-page-frontend-src-pages-homepage-tsx-placed-below-the-promotional-ads-carousel-fetch-the-user-s-spending-limits-via-the-existing-usespendinglimits-hook-and-the-current-month-s-debit-transactions-via-usetransactions-for-each-category-that-has-a-limit-set-display-a-compact-row-showing-category-name-a-progress-bar-current-spend-limit-and-the-amount-spent-vs-the-limit-rows-that-exceed-80-of-the-limit-should-display-an-amber-warning-indicator-rows-exceeding-100-should-display-a-red-over-budget-indicator-show-a-maximum-of-4-categories-with-a-view-all-link-that-navigates-to-the-spendinglimitspage",
+      "featureTitle": "Add a Spending Limits summary section on the Home page (frontend/src/pages/HomePage.tsx), placed below the promotional ads carousel. Fetch the user's spending limits via the existing useSpendingLimits hook and the current month's debit transactions via useTransactions. For each category that has a limit set, display a compact row showing: category name, a progress bar (current spend / limit), and the amount spent vs. the limit. Rows that exceed 80% of the limit should display an amber warning indicator; rows exceeding 100% should display a red over-budget indicator. Show a maximum of 4 categories with a 'View All' link that navigates to the SpendingLimitsPage.",
       "files": [
-        "frontend/src/hooks/useGetBankAccount.ts"
+        "frontend/src/components/SpendingLimitsSummary.tsx",
+        "frontend/src/pages/HomePage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -51,18 +58,20 @@
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-23"
+        "REQ-39"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-a-route-for-bank-linking-in-frontend-src-app-tsx-that-renders-the-banklinkingpage-component",
-      "featureTitle": "Add a route for /bank-linking in frontend/src/App.tsx that renders the BankLinkingPage component",
+      "featureId": "feature-add-a-challenges-leaderboard-preview-section-on-the-home-page-frontend-src-pages-homepage-tsx-placed-below-the-spending-limits-section-fetch-challenges-via-the-existing-usechallenges-hook-and-leaderboard-via-useleaderboard-display-up-to-2-active-incomplete-challenges-as-compact-cards-showing-challenge-title-progress-indicator-and-a-complete-button-that-calls-the-usecompletechallenge-mutation-below-the-challenges-show-a-mini-leaderboard-table-with-the-top-3-users-rank-name-principal-truncated-digi-points-include-a-view-all-link-that-navigates-to-the-challengespage-for-both-sections",
+      "featureTitle": "Add a Challenges & Leaderboard preview section on the Home page (frontend/src/pages/HomePage.tsx), placed below the Spending Limits section. Fetch challenges via the existing useChallenges hook and leaderboard via useLeaderboard. Display up to 2 active (incomplete) challenges as compact cards showing: challenge title, progress indicator, and a 'Complete' button that calls the useCompleteChallenge mutation. Below the challenges, show a mini leaderboard table with the top 3 users (rank, name/principal truncated, digi points). Include a 'View All' link that navigates to the ChallengesPage for both sections.",
       "files": [
-        "frontend/src/App.tsx"
+        "frontend/src/components/ChallengesLeaderboardPreview.tsx",
+        "frontend/src/pages/HomePage.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -70,29 +79,11 @@
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-24"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-navigation-button-or-link-on-the-profilepage-frontend-src-pages-profilepage-tsx-that-directs-users-to-the-bank-linking-page",
-      "featureTitle": "Add a navigation button or link on the ProfilePage (frontend/src/pages/ProfilePage.tsx) that directs users to the bank linking page",
-      "files": [
-        "frontend/src/pages/ProfilePage.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
-      ],
-      "testIds": [
-        "REQ-25"
+        "REQ-40"
       ],
       "confidence": "high"
     }

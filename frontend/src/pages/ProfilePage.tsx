@@ -1,99 +1,124 @@
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { useInternetIdentity } from '../hooks/useInternetIdentity';
-import { useGetCallerUserProfile } from '../hooks/useGetCallerUserProfile';
-import { useGetBankAccount } from '../hooks/useGetBankAccount';
-import { useQueryClient } from '@tanstack/react-query';
+import React from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { LogOut, User, Wallet, Award, Settings, CreditCard, CheckCircle2 } from 'lucide-react';
+import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { useQueryClient } from '@tanstack/react-query';
+import {
+  Gift,
+  Tag,
+  LogOut,
+  ChevronRight,
+  Shield,
+} from 'lucide-react';
+import ProfileHeader from '../components/ProfileHeader';
+import LinkedBankAccount from '../components/LinkedBankAccount';
+import SubscriptionPlan from '../components/SubscriptionPlan';
+import NotificationSettings from '../components/NotificationSettings';
+import { Separator } from '@/components/ui/separator';
 
 export default function ProfilePage() {
-  const { clear } = useInternetIdentity();
-  const { data: profile } = useGetCallerUserProfile();
-  const { data: linkedAccount } = useGetBankAccount();
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { clear } = useInternetIdentity();
+  const queryClient = useQueryClient();
 
   const handleLogout = async () => {
     await clear();
     queryClient.clear();
-    navigate({ to: '/' });
+    navigate({ to: '/login' });
   };
 
   const menuItems = [
-    { icon: Settings, label: 'Spending Limits', path: '/limits' },
-    { icon: Award, label: 'Referral Program', path: '/referral' },
-    { 
-      icon: CreditCard, 
-      label: linkedAccount ? 'Manage Bank Account' : 'Link Bank Account', 
-      path: '/bank-linking',
-      badge: linkedAccount ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : null
+    {
+      icon: <Gift size={18} className="text-primary" />,
+      label: 'Refer & Earn',
+      description: 'Earn DigiPoints for referrals',
+      onClick: () => navigate({ to: '/referral' }),
+    },
+    {
+      icon: <Tag size={18} className="text-primary" />,
+      label: 'Offers & Deals',
+      description: 'Exclusive student discounts',
+      onClick: () => navigate({ to: '/offers' }),
+    },
+    {
+      icon: <Shield size={18} className="text-primary" />,
+      label: 'Security',
+      description: 'Manage your account security',
+      onClick: () => {},
     },
   ];
 
   return (
-    <div className="space-y-6">
-      <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold text-foreground">Profile</h2>
-        <p className="text-muted-foreground">Manage your account</p>
+    <div className="min-h-screen bg-background pb-24">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-primary to-secondary px-4 pt-12 pb-6">
+        <h1 className="text-white font-bold text-2xl">Profile</h1>
+        <p className="text-white/70 text-sm mt-1">Manage your account</p>
       </div>
 
-      <Card className="bg-gradient-to-br from-[oklch(0.45_0.15_280)] to-[oklch(0.35_0.12_260)] text-white">
-        <CardContent className="p-6 text-center space-y-4">
-          <div className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center mx-auto">
-            <User className="w-10 h-10" />
-          </div>
-          <div>
-            <h3 className="text-2xl font-bold">{profile?.name || 'Student'}</h3>
-            <p className="text-sm opacity-75 mt-1">FinMate Member</p>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="px-4 py-4 space-y-4">
+        {/* Profile Header */}
+        <ProfileHeader />
 
-      <div className="grid grid-cols-2 gap-4">
-        <Card>
-          <CardContent className="p-4 text-center space-y-2">
-            <Wallet className="w-8 h-8 mx-auto text-[oklch(0.55_0.18_280)]" />
-            <p className="text-2xl font-bold text-foreground">₹{(profile?.balance || 0).toFixed(2)}</p>
-            <p className="text-xs text-muted-foreground">Balance</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-4 text-center space-y-2">
-            <Award className="w-8 h-8 mx-auto text-[oklch(0.55_0.18_280)]" />
-            <p className="text-2xl font-bold text-foreground">{Number(profile?.digiPoints || 0)}</p>
-            <p className="text-xs text-muted-foreground">Digi Points</p>
-          </CardContent>
-        </Card>
+        <Separator />
+
+        {/* Linked Bank Account */}
+        <LinkedBankAccount />
+
+        {/* Subscription Plan */}
+        <SubscriptionPlan />
+
+        {/* Notification Settings */}
+        <NotificationSettings />
+
+        <Separator />
+
+        {/* Menu Items */}
+        <div className="bg-card rounded-2xl border border-border overflow-hidden">
+          {menuItems.map((item, idx) => (
+            <button
+              key={item.label}
+              onClick={item.onClick}
+              className={`w-full flex items-center gap-3 px-4 py-3.5 hover:bg-muted/50 transition-colors text-left ${
+                idx < menuItems.length - 1 ? 'border-b border-border/50' : ''
+              }`}
+            >
+              <div className="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                {item.icon}
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-medium text-foreground">{item.label}</p>
+                <p className="text-xs text-muted-foreground">{item.description}</p>
+              </div>
+              <ChevronRight size={16} className="text-muted-foreground" />
+            </button>
+          ))}
+        </div>
+
+        {/* Logout */}
+        <button
+          onClick={handleLogout}
+          className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border-2 border-red-500/30 text-red-500 hover:bg-red-500/10 transition-all font-medium text-sm"
+        >
+          <LogOut size={18} />
+          Log Out
+        </button>
+
+        {/* Footer */}
+        <div className="text-center py-4">
+          <p className="text-xs text-muted-foreground">
+            Built with ❤️ using{' '}
+            <a
+              href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              caffeine.ai
+            </a>
+          </p>
+          <p className="text-xs text-muted-foreground mt-1">© {new Date().getFullYear()} FinMate</p>
+        </div>
       </div>
-
-      <Card>
-        <CardContent className="p-4 space-y-2">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.path}
-                onClick={() => navigate({ to: item.path })}
-                className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-accent transition-colors text-left"
-              >
-                <Icon className="w-5 h-5 text-[oklch(0.55_0.18_280)]" />
-                <span className="font-medium text-foreground flex-1">{item.label}</span>
-                {item.badge}
-              </button>
-            );
-          })}
-        </CardContent>
-      </Card>
-
-      <Button
-        onClick={handleLogout}
-        variant="destructive"
-        className="w-full"
-      >
-        <LogOut className="w-4 h-4 mr-2" />
-        Logout
-      </Button>
     </div>
   );
 }

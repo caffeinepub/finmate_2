@@ -21,7 +21,19 @@ export function filterTransactionsByPeriod(
   }
 
   return transactions.filter((t) => {
-    const transactionTime = Number(t.timestamp) / 1000000;
+    const transactionTime = Number(t.timestamp) / 1_000_000;
     return transactionTime >= cutoffTime;
   });
+}
+
+export function filterByWeek(transactions: Transaction[]): Transaction[] {
+  return filterTransactionsByPeriod(transactions, 'weekly');
+}
+
+export function filterByMonth(transactions: Transaction[]): Transaction[] {
+  return filterTransactionsByPeriod(transactions, 'monthly');
+}
+
+export function filterByYear(transactions: Transaction[]): Transaction[] {
+  return filterTransactionsByPeriod(transactions, 'yearly');
 }

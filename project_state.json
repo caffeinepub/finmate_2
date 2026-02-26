@@ -1,7 +1,7 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 7,
-  "summary": "Mobile budgeting app for students with gamification, expense tracking, AI-powered categorization, payment integration, and analytics",
+  "projectStateVersion": 11,
+  "summary": "Mobile budgeting & payment app (FinMate) with banking-grade security, biometric auth, AI-powered categorization & chatbot, gamification, multi-bank integration, analytics, and 4-page structure (Home, History, Analytics, Profile) with dark/light mode",
   "architectural_notes": [
     "Mobile app targeting student users exclusively",
     "AI-powered automatic transaction categorization engine required",
@@ -9,10 +9,14 @@
     "Bank account linking API integration for balance and transactions",
     "Dual AI chatbot system: general assistance + analytics-focused",
     "Gamification backend for points, challenges, and leaderboard",
-    "Purplish-blue theme with PhonePe-style UI patterns"
+    "Purplish-blue theme with PhonePe-style UI patterns",
+    "Banking-grade security: biometric auth, AES-256 encryption, JWT, SSL pinning, fraud detection AI, MFA for high-value transfers",
+    "Multi-bank Open Banking API integration for real-time balance sync across accounts, credit cards, and debit cards",
+    "Dark/light mode theming support required throughout the app"
   ],
   "known_issues": [],
-  "isFixRequest": true,
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Budgeting tips ad banner illustration — abstract coins and a piggy bank with a purple-blue gradient background (ad-budgeting.dim_600x200.png)\n- Personal loans ad banner illustration — stylized document and currency notes with a blue-indigo gradient background (ad-loans.dim_600x200.png)\n- Investments ad banner illustration — upward trending graph with gold coins and a deep-purple gradient background (ad-investments.dim_600x200.png)\n- Credit score ad banner illustration — shield icon with a star rating dial and a teal-purple gradient background (ad-credit-score.dim_600x200.png)\n- Student savings ad banner illustration — graduation cap with stacked coins and a violet-blue gradient background (ad-student-savings.dim_600x200.png)",
   "existing_features": [
     {
       "id": "feature-create-user-authentication-system-using-internet-identity-for-secure-student-access",
@@ -157,6 +161,126 @@
         "REQ-25"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-a-dark-mode-light-mode-toggle-button-in-the-top-section-of-the-home-page-frontend-src-pages-homepage-tsx-that-switches-the-app-wide-theme-persist-the-user-s-preference-in-localstorage-and-apply-the-appropriate-tailwind-dark-class-to-the-root-element",
+      "title": "Add a dark mode / light mode toggle button in the top section of the Home page (frontend/src/pages/HomePage.tsx) that switches the app-wide theme. Persist the user's preference in localStorage and apply the appropriate Tailwind dark class to the root element.",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enhance-the-home-page-top-section-frontend-src-pages-homepage-tsx-to-display-a-personalized-greeting-e-g-good-morning-name-the-user-s-profile-avatar-initials-and-a-notifications-bell-icon-with-a-badge-indicator-these-should-appear-in-a-structured-top-bar-layout-consistent-with-the-purple-blue-theme",
+      "title": "Enhance the Home page top section (frontend/src/pages/HomePage.tsx) to display: a personalized greeting (e.g., 'Good morning, [Name]'), the user's profile avatar/initials, and a notifications bell icon with a badge indicator. These should appear in a structured top bar layout consistent with the purple-blue theme.",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-quick-actions-row-on-the-home-page-frontend-src-pages-homepage-tsx-below-the-scan-pay-cta-actions-recharge-book-train-tickets-and-send-money-each-action-should-be-a-tappable-icon-label-button-recharge-navigates-to-a-recharge-flow-send-money-opens-the-qr-phone-payment-modal-and-book-train-tickets-shows-a-placeholder-coming-soon-toast",
+      "title": "Add Quick Actions row on the Home page (frontend/src/pages/HomePage.tsx) below the Scan & Pay CTA. Actions: 'Recharge', 'Book Train Tickets', and 'Send Money'. Each action should be a tappable icon+label button. 'Recharge' navigates to a recharge flow, 'Send Money' opens the QR/phone payment modal, and 'Book Train Tickets' shows a placeholder 'Coming Soon' toast.",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-search-bar-and-export-functionality-to-the-history-page-frontend-src-pages-historypage-tsx-the-search-bar-should-filter-the-displayed-transaction-list-in-real-time-by-transaction-name-description-add-an-export-button-that-generates-and-downloads-a-csv-file-of-the-currently-filtered-transactions",
+      "title": "Add a search bar and export functionality to the History page (frontend/src/pages/HistoryPage.tsx). The search bar should filter the displayed transaction list in real-time by transaction name/description. Add an 'Export' button that generates and downloads a CSV file of the currently filtered transactions.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-manual-re-categorization-to-the-history-page-frontend-src-pages-historypage-tsx-each-transaction-row-should-have-an-edit-category-icon-that-opens-a-dropdown-or-modal-to-select-a-new-category-on-confirmation-the-transaction-s-category-is-updated-via-a-backend-mutation",
+      "title": "Add manual re-categorization to the History page (frontend/src/pages/HistoryPage.tsx). Each transaction row should have an edit/category icon that opens a dropdown or modal to select a new category. On confirmation, the transaction's category is updated via a backend mutation.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-expand-the-transaction-category-list-across-the-app-backend-main-mo-paymentform-history-filter-analytics-to-include-food-clothes-college-expenses-travel-subscriptions-bills-emi-investments-recharge-and-others-custom-ensure-these-categories-are-consistently-used-in-transaction-creation-filtering-and-analytics",
+      "title": "Expand the transaction category list across the app (backend/main.mo, PaymentForm, History filter, Analytics) to include: Food, Clothes, College Expenses, Travel, Subscriptions, Bills, EMI, Investments, Recharge, and Others (custom). Ensure these categories are consistently used in transaction creation, filtering, and analytics.",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-weekly-comparison-bar-chart-and-a-financial-health-score-widget-to-the-analytics-page-frontend-src-pages-analyticspage-tsx-the-weekly-comparison-chart-should-show-spending-totals-for-the-current-week-vs-the-previous-week-by-category-the-financial-health-score-0-100-should-be-computed-client-side-based-on-savings-rate-spending-limit-adherence-and-challenge-completion-rate-displayed-as-a-progress-ring-with-a-color-coded-label-poor-fair-good-excellent",
+      "title": "Add a Weekly Comparison bar chart and a Financial Health Score widget to the Analytics page (frontend/src/pages/AnalyticsPage.tsx). The weekly comparison chart should show spending totals for the current week vs the previous week by category. The Financial Health Score (0–100) should be computed client-side based on: savings rate, spending limit adherence, and challenge completion rate — displayed as a progress ring with a color-coded label (Poor/Fair/Good/Excellent).",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enhance-the-ai-analyst-section-on-the-analytics-page-frontend-src-pages-analyticspage-tsx-frontend-src-components-analyticschatbot-tsx-to-proactively-display-ai-generated-insight-cards-not-just-chat-on-page-load-auto-generate-3-4-insight-cards-using-the-analyticsinsights-utility-covering-top-overspending-category-subscription-waste-detection-savings-suggestion-and-a-comparison-to-last-month-cards-should-appear-above-the-chatbot-interface",
+      "title": "Enhance the AI Analyst section on the Analytics page (frontend/src/pages/AnalyticsPage.tsx / frontend/src/components/AnalyticsChatbot.tsx) to proactively display AI-generated insight cards (not just chat). On page load, auto-generate 3–4 insight cards using the analyticsInsights utility covering: top overspending category, subscription waste detection, savings suggestion, and a comparison to last month. Cards should appear above the chatbot interface.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enhance-the-profile-page-frontend-src-pages-profilepage-tsx-to-display-user-s-email-from-internet-identity-profile-phone-number-editable-field-saved-to-profile-profile-avatar-with-initials-linked-bank-accounts-section-showing-account-number-masked-and-a-subscription-plan-section-showing-a-free-plan-badge-with-an-upgrade-cta-placeholder",
+      "title": "Enhance the Profile page (frontend/src/pages/ProfilePage.tsx) to display: user's email (from Internet Identity / profile), phone number (editable field saved to profile), profile avatar with initials, linked bank accounts section showing account number (masked), and a Subscription Plan section showing a 'Free Plan' badge with an 'Upgrade' CTA placeholder.",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-notifications-settings-section-to-the-profile-page-frontend-src-pages-profilepage-tsx-with-toggle-switches-for-spending-limit-alerts-challenge-reminders-weekly-summary-and-offer-notifications-persist-notification-preferences-in-the-backend-user-profile",
+      "title": "Add a Notifications settings section to the Profile page (frontend/src/pages/ProfilePage.tsx) with toggle switches for: 'Spending limit alerts', 'Challenge reminders', 'Weekly summary', and 'Offer notifications'. Persist notification preferences in the backend user profile.",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-an-auto-logout-mechanism-to-the-frontend-that-logs-the-user-out-after-5-minutes-of-inactivity-no-mouse-movement-clicks-or-key-presses-show-a-60-second-countdown-warning-modal-before-logging-out-reset-the-inactivity-timer-on-any-user-interaction-on-logout-clear-the-session-and-redirect-to-the-login-page",
+      "title": "Add an auto-logout mechanism to the frontend that logs the user out after 5 minutes of inactivity (no mouse movement, clicks, or key presses). Show a 60-second countdown warning modal before logging out. Reset the inactivity timer on any user interaction. On logout, clear the session and redirect to the login page.",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-bankbalancecard-component-from-the-home-page-frontend-src-pages-homepage-tsx-in-its-place-render-a-horizontally-scrollable-promotional-ads-banners-carousel-with-cards-covering-topics-such-as-budgeting-tips-personal-loans-mutual-fund-investments-credit-score-improvement-and-student-savings-plans-each-ad-card-should-display-a-title-a-short-description-a-relevant-icon-or-illustration-a-cta-button-label-e-g-learn-more-apply-now-and-use-the-existing-purple-blue-theme-with-gradient-backgrounds-the-carousel-should-auto-scroll-every-4-seconds-and-support-manual-swipe-click-navigation-with-dot-indicators",
+      "title": "Remove the BankBalanceCard component from the Home page (frontend/src/pages/HomePage.tsx). In its place, render a horizontally scrollable promotional ads/banners carousel with cards covering topics such as Budgeting Tips, Personal Loans, Mutual Fund Investments, Credit Score Improvement, and Student Savings Plans. Each ad card should display a title, a short description, a relevant icon or illustration, a CTA button label (e.g., 'Learn More', 'Apply Now'), and use the existing purple-blue theme with gradient backgrounds. The carousel should auto-scroll every 4 seconds and support manual swipe/click navigation with dot indicators.",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-check-balance-button-on-the-home-page-frontend-src-pages-homepage-tsx-that-when-tapped-opens-a-pin-verification-modal-the-modal-should-display-a-6-digit-pin-input-masked-on-correct-pin-entry-validate-against-a-pin-stored-in-localstorage-or-the-backend-user-profile-reveal-the-bank-balance-in-a-compact-card-overlay-or-inline-section-after-3-consecutive-incorrect-pin-attempts-lock-the-modal-for-30-seconds-and-show-an-error-message-the-backend-should-expose-a-function-to-store-and-verify-the-pin-hash-or-use-a-localstorage-based-pin-for-client-side-verification-as-a-fallback",
+      "title": "Add a 'Check Balance' button on the Home page (frontend/src/pages/HomePage.tsx) that, when tapped, opens a PIN verification modal. The modal should display a 6-digit PIN input (masked). On correct PIN entry (validate against a PIN stored in localStorage or the backend user profile), reveal the bank balance in a compact card overlay or inline section. After 3 consecutive incorrect PIN attempts, lock the modal for 30 seconds and show an error message. The backend should expose a function to store and verify the PIN hash, or use a localStorage-based PIN for client-side verification as a fallback.",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-spending-limits-summary-section-on-the-home-page-frontend-src-pages-homepage-tsx-placed-below-the-promotional-ads-carousel-fetch-the-user-s-spending-limits-via-the-existing-usespendinglimits-hook-and-the-current-month-s-debit-transactions-via-usetransactions-for-each-category-that-has-a-limit-set-display-a-compact-row-showing-category-name-a-progress-bar-current-spend-limit-and-the-amount-spent-vs-the-limit-rows-that-exceed-80-of-the-limit-should-display-an-amber-warning-indicator-rows-exceeding-100-should-display-a-red-over-budget-indicator-show-a-maximum-of-4-categories-with-a-view-all-link-that-navigates-to-the-spendinglimitspage",
+      "title": "Add a Spending Limits summary section on the Home page (frontend/src/pages/HomePage.tsx), placed below the promotional ads carousel. Fetch the user's spending limits via the existing useSpendingLimits hook and the current month's debit transactions via useTransactions. For each category that has a limit set, display a compact row showing: category name, a progress bar (current spend / limit), and the amount spent vs. the limit. Rows that exceed 80% of the limit should display an amber warning indicator; rows exceeding 100% should display a red over-budget indicator. Show a maximum of 4 categories with a 'View All' link that navigates to the SpendingLimitsPage.",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-challenges-leaderboard-preview-section-on-the-home-page-frontend-src-pages-homepage-tsx-placed-below-the-spending-limits-section-fetch-challenges-via-the-existing-usechallenges-hook-and-leaderboard-via-useleaderboard-display-up-to-2-active-incomplete-challenges-as-compact-cards-showing-challenge-title-progress-indicator-and-a-complete-button-that-calls-the-usecompletechallenge-mutation-below-the-challenges-show-a-mini-leaderboard-table-with-the-top-3-users-rank-name-principal-truncated-digi-points-include-a-view-all-link-that-navigates-to-the-challengespage-for-both-sections",
+      "title": "Add a Challenges & Leaderboard preview section on the Home page (frontend/src/pages/HomePage.tsx), placed below the Spending Limits section. Fetch challenges via the existing useChallenges hook and leaderboard via useLeaderboard. Display up to 2 active (incomplete) challenges as compact cards showing: challenge title, progress indicator, and a 'Complete' button that calls the useCompleteChallenge mutation. Below the challenges, show a mini leaderboard table with the top 3 users (rank, name/principal truncated, digi points). Include a 'View All' link that navigates to the ChallengesPage for both sections.",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -274,6 +398,90 @@
       "reqIds": [
         "REQ-20"
       ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-30",
+      "summary": "Splash screen with biometric authentication (fingerprint/Face ID), 6-digit PIN fallback, 3-failed-attempts lockout, and optional device binding + OTP",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-31",
+      "summary": "Banking-grade security: AES-256 encryption, SSL pinning, JWT auth, auto logout on inactivity, root/jailbreak detection, fraud detection AI, transaction anomaly detection, encrypted local storage, MFA for high-value transfers",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-32",
+      "summary": "Dark mode / light mode toggle accessible from home page top section",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-33",
+      "summary": "Home page top section: greeting, profile image, notifications bell, and check balance for all linked accounts",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-34",
+      "summary": "Quick actions on home page: Recharge, Book Train Tickets, Send Money below the Scan & Pay CTA",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-35",
+      "summary": "Multi-bank account linking supporting multiple bank accounts, credit cards, debit cards with real-time sync via Open Banking API",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-36",
+      "summary": "Transaction history: search, export as PDF/CSV, bulk categorize, manual re-categorization, filter by bank account; expanded categories including Subscriptions, Bills, EMI, Investments",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-37",
+      "summary": "Analytics page: category-wise pie chart, monthly bar graph, weekly comparison graph, income vs expense line graph, per-category graphs, overall financial health score",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-38",
+      "summary": "AI Analyst in analytics page: overspending alerts, savings suggestions, investment suggestions, subscription waste detection, personalized budget plan",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-39",
+      "summary": "Profile page: profile image, name, email, phone, check balance, linked bank accounts management, credit/debit cards, refer & earn DigiPoints, notifications, subscription plan, log out",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-40",
+      "summary": "Remove bank balance display from home page; replace with promotional ads/banners related to budgeting, loans, and investments",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-41",
+      "summary": "Bank balance check requires PIN verification before displaying balance",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-42",
+      "summary": "Show spending limits per category on the home page with progress indicators",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-43",
+      "summary": "Show gamification challenges and leaderboard on the home page",
+      "reqIds": [],
       "status": "pending"
     }
   ],

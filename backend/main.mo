@@ -12,12 +12,14 @@ import Float "mo:core/Float";
 import Int "mo:core/Int";
 import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
+import MixinStorage "blob-storage/Mixin";
 import Migration "migration";
 
 (with migration = Migration.run)
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
+  include MixinStorage();
 
   public type SpendingLimit = {
     category : Text;
@@ -66,6 +68,7 @@ actor {
   let referPoints = Map.empty<Principal, Nat>();
   let challenges = Map.empty<Principal, List.List<Challenge>>();
   let referrals = Map.empty<Principal, List.List<Principal>>();
+  let pinHashes = Map.empty<Principal, Text>();
 
   let categories = [
     "grocery",
@@ -79,28 +82,28 @@ actor {
 
   // Profile functions
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can view profiles");
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can get their profile");
     };
     profiles.get(caller);
   };
 
   public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfile {
-    if (caller != user and not AccessControl.isAdmin(accessControlState, caller)) {
-      Runtime.trap("Unauthorized: Can only view your own profile");
+    if (not AccessControl.isAdmin(accessControlState, caller) and caller != user) {
+      Runtime.trap("Unauthorized: Cannot view other users' profiles");
     };
     profiles.get(user);
   };
 
   public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can save profiles");
     };
     profiles.add(caller, profile);
   };
 
   public shared ({ caller }) func setBankAccount(bankAccountNumber : Text) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can set bank account");
     };
 
@@ -121,7 +124,7 @@ actor {
   };
 
   public query ({ caller }) func getBankAccount() : async ?Text {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can get bank account");
     };
     let existingProfile = switch (profiles.get(caller)) {
@@ -133,8 +136,8 @@ actor {
 
   // Balance operations
   public query ({ caller }) func getCallerBalance() : async Float {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can check balance");
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can get their balance");
     };
     switch (profiles.get(caller)) {
       case (null) { 0.0 };
@@ -143,8 +146,8 @@ actor {
   };
 
   public shared ({ caller }) func updateBalance(newBalance : Float) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can update balance");
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can update their balance");
     };
     switch (profiles.get(caller)) {
       case (null) { Runtime.trap("Profile does not exist") };
@@ -163,7 +166,7 @@ actor {
 
   // Transaction operations
   public shared ({ caller }) func addTransaction(transaction : Transaction) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can add transactions");
     };
 
@@ -177,8 +180,8 @@ actor {
   };
 
   public query ({ caller }) func getTransactions(category : ?Text) : async [Transaction] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can fetch transactions");
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can get transactions");
     };
     switch (transactions.get(caller)) {
       case (null) { [] };
@@ -195,7 +198,7 @@ actor {
 
   // Spending limits
   public shared ({ caller }) func setSpendingLimit(category : Text, limit : Float) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can set spending limits");
     };
     switch (profiles.get(caller)) {
@@ -218,8 +221,8 @@ actor {
   };
 
   public query ({ caller }) func getSpendingLimits() : async [SpendingLimit] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can view spending limits");
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can get spending limits");
     };
     switch (profiles.get(caller)) {
       case (null) { [] };
@@ -229,7 +232,7 @@ actor {
 
   // Digi points operations
   public shared ({ caller }) func addDigiPoints(points : Nat) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can add digi points");
     };
     switch (profiles.get(caller)) {
@@ -248,8 +251,8 @@ actor {
   };
 
   public query ({ caller }) func getDigiPoints() : async Nat {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can view digi points");
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can get digi points");
     };
     switch (profiles.get(caller)) {
       case (null) { 0 };
@@ -259,7 +262,7 @@ actor {
 
   // Challenges
   public shared ({ caller }) func createChallenge(description : Text, targetAmount : Float, rewardPoints : Nat) : async Nat {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can create challenges");
     };
 
@@ -269,6 +272,7 @@ actor {
     };
 
     let challengeId = existingChallenges.size();
+
     let newChallenge : Challenge = {
       id = challengeId;
       description = description;
@@ -283,8 +287,8 @@ actor {
   };
 
   public query ({ caller }) func getChallenges() : async [Challenge] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can view challenges");
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can get challenges");
     };
     switch (challenges.get(caller)) {
       case (null) { [] };
@@ -293,7 +297,7 @@ actor {
   };
 
   public shared ({ caller }) func completeChallenge(challengeId : Nat) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can complete challenges");
     };
 
@@ -315,7 +319,7 @@ actor {
 
   // Referral system
   public shared ({ caller }) func referUser(referredUser : Principal) : async () {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
       Runtime.trap("Unauthorized: Only users can refer others");
     };
 
@@ -335,8 +339,8 @@ actor {
   };
 
   public query ({ caller }) func getReferralPoints() : async Nat {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can view referral points");
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can get referral points");
     };
     switch (referPoints.get(caller)) {
       case (null) { 0 };
@@ -345,8 +349,8 @@ actor {
   };
 
   public query ({ caller }) func getReferrals() : async [Principal] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can view referrals");
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can get referrals");
     };
     switch (referrals.get(caller)) {
       case (null) { [] };
@@ -354,10 +358,10 @@ actor {
     };
   };
 
-  // Leaderboard (accessible to all users)
+  // Leaderboard
   public query ({ caller }) func getLeaderboard() : async [LeaderboardEntry] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can view leaderboard");
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can view the leaderboard");
     };
 
     let entries = profiles.entries().map(func((principal, profile)) : LeaderboardEntry {
@@ -379,21 +383,49 @@ actor {
     });
   };
 
-  // Categories (accessible to all including guests)
-  public query ({ caller }) func getSupportedCategories() : async [Text] {
+  // Categories — public, no sensitive data
+  public query func getSupportedCategories() : async [Text] {
     categories;
+  };
+
+  // PIN management for balance check feature
+  public shared ({ caller }) func storePinHash(pinHash : Text) : async () {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can store a PIN");
+    };
+    pinHashes.add(caller, pinHash);
+  };
+
+  public query ({ caller }) func verifyPinHash(pinHash : Text) : async Bool {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can verify a PIN");
+    };
+    switch (pinHashes.get(caller)) {
+      case (null) { false };
+      case (?stored) { stored == pinHash };
+    };
+  };
+
+  public query ({ caller }) func hasPinSet() : async Bool {
+    if (not AccessControl.hasPermission(accessControlState, caller, #user)) {
+      Runtime.trap("Unauthorized: Only users can check PIN status");
+    };
+    switch (pinHashes.get(caller)) {
+      case (null) { false };
+      case (?_) { true };
+    };
   };
 
   // Admin functions
   public query ({ caller }) func getAllUsers() : async [Principal] {
-    if (not (AccessControl.isAdmin(accessControlState, caller))) {
-      Runtime.trap("Unauthorized: Only admins can view all users");
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
+      Runtime.trap("Unauthorized: Only admins can get all users");
     };
     profiles.keys().toArray();
   };
 
   public shared ({ caller }) func resetUserData(user : Principal) : async () {
-    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+    if (not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Only admins can reset user data");
     };
     profiles.remove(user);
@@ -401,5 +433,6 @@ actor {
     challenges.remove(user);
     referrals.remove(user);
     referPoints.remove(user);
+    pinHashes.remove(user);
   };
 };

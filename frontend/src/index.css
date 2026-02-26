@@ -3,112 +3,114 @@
 @tailwind utilities;
 
 @layer base {
-    :root {
-        --radius: 0.75rem;
-        --background: 0.98 0.01 280;
-        --foreground: 0.15 0.02 280;
-        --card: 1 0 0;
-        --card-foreground: 0.15 0.02 280;
-        --popover: 1 0 0;
-        --popover-foreground: 0.15 0.02 280;
-        --primary: 0.55 0.18 280;
-        --primary-foreground: 1 0 0;
-        --secondary: 0.45 0.15 260;
-        --secondary-foreground: 1 0 0;
-        --muted: 0.92 0.02 280;
-        --muted-foreground: 0.50 0.05 280;
-        --accent: 0.95 0.03 280;
-        --accent-foreground: 0.20 0.05 280;
-        --destructive: 0.55 0.22 20;
-        --destructive-foreground: 1 0 0;
-        --border: 0.90 0.02 280;
-        --input: 0.90 0.02 280;
-        --ring: 0.55 0.18 280;
-        --chart-1: 0.55 0.18 280;
-        --chart-2: 0.60 0.15 260;
-        --chart-3: 0.50 0.20 300;
-        --chart-4: 0.65 0.12 240;
-        --chart-5: 0.45 0.22 320;
-    }
+  :root {
+    --background: oklch(0.98 0.005 280);
+    --foreground: oklch(0.15 0.02 280);
 
-    .dark {
-        --background: 0.15 0.02 280;
-        --foreground: 0.98 0.01 280;
-        --card: 0.20 0.03 280;
-        --card-foreground: 0.98 0.01 280;
-        --popover: 0.18 0.03 280;
-        --popover-foreground: 0.98 0.01 280;
-        --primary: 0.60 0.20 280;
-        --primary-foreground: 0.98 0 0;
-        --secondary: 0.30 0.08 260;
-        --secondary-foreground: 0.98 0.01 280;
-        --muted: 0.25 0.04 280;
-        --muted-foreground: 0.70 0.05 280;
-        --accent: 0.30 0.08 280;
-        --accent-foreground: 0.98 0.01 280;
-        --destructive: 0.60 0.25 20;
-        --destructive-foreground: 0.98 0 0;
-        --border: 0.30 0.05 280;
-        --input: 0.30 0.05 280;
-        --ring: 0.60 0.20 280;
-        --chart-1: 0.60 0.20 280;
-        --chart-2: 0.65 0.18 260;
-        --chart-3: 0.55 0.22 300;
-        --chart-4: 0.70 0.15 240;
-        --chart-5: 0.50 0.25 320;
-    }
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.15 0.02 280);
 
-    * {
-        @apply border-border;
-    }
-    body {
-        @apply bg-background text-foreground;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-    }
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.15 0.02 280);
+
+    --primary: oklch(0.50 0.22 290);
+    --primary-foreground: oklch(1 0 0);
+
+    --secondary: oklch(0.55 0.20 250);
+    --secondary-foreground: oklch(1 0 0);
+
+    --muted: oklch(0.94 0.01 280);
+    --muted-foreground: oklch(0.50 0.03 280);
+
+    --accent: oklch(0.92 0.04 290);
+    --accent-foreground: oklch(0.30 0.15 290);
+
+    --destructive: oklch(0.60 0.22 25);
+    --destructive-foreground: oklch(1 0 0);
+
+    --border: oklch(0.88 0.01 280);
+    --input: oklch(0.88 0.01 280);
+    --ring: oklch(0.50 0.22 290);
+
+    --success: oklch(0.65 0.18 145);
+    --warning: oklch(0.75 0.18 85);
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: oklch(0.12 0.02 280);
+    --foreground: oklch(0.95 0.01 280);
+
+    --card: oklch(0.17 0.025 280);
+    --card-foreground: oklch(0.95 0.01 280);
+
+    --popover: oklch(0.17 0.025 280);
+    --popover-foreground: oklch(0.95 0.01 280);
+
+    --primary: oklch(0.65 0.22 290);
+    --primary-foreground: oklch(0.10 0.02 280);
+
+    --secondary: oklch(0.60 0.20 250);
+    --secondary-foreground: oklch(0.10 0.02 280);
+
+    --muted: oklch(0.22 0.02 280);
+    --muted-foreground: oklch(0.65 0.03 280);
+
+    --accent: oklch(0.25 0.05 290);
+    --accent-foreground: oklch(0.85 0.10 290);
+
+    --destructive: oklch(0.55 0.22 25);
+    --destructive-foreground: oklch(1 0 0);
+
+    --border: oklch(0.28 0.02 280);
+    --input: oklch(0.28 0.02 280);
+    --ring: oklch(0.65 0.22 290);
+
+    --success: oklch(0.60 0.18 145);
+    --warning: oklch(0.70 0.18 85);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 @layer utilities {
-    /* Smooth fade-in animation */
-    @keyframes fade-in {
-        from {
-            opacity: 0;
-            transform: scale(0.95);
-        }
-        to {
-            opacity: 1;
-            transform: scale(1);
-        }
-    }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 
-    .animate-fade-in {
-        animation: fade-in 0.4s ease-out forwards;
-    }
+  .fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
 
-    /* Prevent layout shift utilities */
-    .prevent-cls {
-        content-visibility: auto;
-        contain-intrinsic-size: auto 500px;
-    }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
 
-    /* GPU-accelerated transforms */
-    .gpu-accelerated {
-        transform: translateZ(0);
-        will-change: transform;
-    }
-
-    /* Smooth transitions for interactive elements */
-    .smooth-transition {
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-}
-
-/* Respect user's motion preferences */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
+  .gradient-text {
+    background: linear-gradient(135deg, oklch(0.50 0.22 290), oklch(0.55 0.20 250));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
 }

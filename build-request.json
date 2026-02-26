@@ -1,175 +1,111 @@
 {
   "kind": "build_request",
-  "title": "Add bank account linking functionality",
+  "title": "Replace bank balance with ads, add PIN-verified balance check, and surface spending limits, challenges & leaderboard on Home page",
   "projectName": "FinMate",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-18",
-      "text": "Add a bank account number field to the UserProfile type in backend/main.mo to store the linked bank account number as optional Text",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-final"
-        ],
-        "quotes": [
-          "to link bank account"
-        ]
-      },
-      "acceptanceCriteria": [
-        "UserProfile type includes an optional bankAccountNumber field of type ?Text",
-        "Field is initialized as null for new profiles",
-        "Existing profiles can be updated with a bank account number"
-      ]
-    },
-    {
-      "id": "REQ-19",
-      "text": "Create a backend function setBankAccount that accepts a bank account number as Text and updates the caller's profile with this account number",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-final"
-        ],
-        "quotes": [
-          "to link bank account"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Function validates that the caller has an existing profile",
-        "Function updates the bankAccountNumber field in the user's profile",
-        "Function returns a success/error result type",
-        "Access control ensures only the profile owner can update their account"
-      ]
-    },
-    {
-      "id": "REQ-20",
-      "text": "Create a backend query function getBankAccount that returns the caller's linked bank account number if set, otherwise returns null",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-final"
-        ],
-        "quotes": [
-          "to link bank account"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Function retrieves the bankAccountNumber from the caller's profile",
-        "Returns ?Text type (null if no account linked)",
-        "Only returns data for the authenticated caller"
-      ]
-    },
-    {
-      "id": "REQ-21",
-      "text": "Create a BankLinkingPage component at frontend/src/pages/BankLinkingPage.tsx with a form to input and submit a bank account number",
+      "id": "REQ-37",
+      "text": "Remove the BankBalanceCard component from the Home page (frontend/src/pages/HomePage.tsx). In its place, render a horizontally scrollable promotional ads/banners carousel with cards covering topics such as Budgeting Tips, Personal Loans, Mutual Fund Investments, Credit Score Improvement, and Student Savings Plans. Each ad card should display a title, a short description, a relevant icon or illustration, a CTA button label (e.g., 'Learn More', 'Apply Now'), and use the existing purple-blue theme with gradient backgrounds. The carousel should auto-scroll every 4 seconds and support manual swipe/click navigation with dot indicators.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-final"
+          "msg-4"
         ],
         "quotes": [
-          "to link bank account"
+          "remove bank balance from home page replace it by ads related to bugeting,loans,invest,etc"
         ]
       },
       "acceptanceCriteria": [
-        "Page includes a form with an input field for bank account number",
-        "Form validates that account number is not empty before submission",
-        "Submit button triggers the backend setBankAccount function",
-        "Shows success message on successful linking",
-        "Shows error message if linking fails",
-        "Displays current linked account number if one exists"
+        "BankBalanceCard is no longer visible on the Home page",
+        "A carousel of at least 5 promotional ad cards is shown in its place",
+        "Ad categories include Budgeting, Loans, and Investments at minimum",
+        "Carousel auto-scrolls every 4 seconds",
+        "Dot indicators reflect current card position",
+        "Cards follow the purple-blue theme with gradient styling"
       ]
     },
     {
-      "id": "REQ-22",
-      "text": "Create a custom hook useSetBankAccount at frontend/src/hooks/useSetBankAccount.ts that wraps the backend setBankAccount function as a React Query mutation",
-      "target": "frontend",
+      "id": "REQ-38",
+      "text": "Add a 'Check Balance' button on the Home page (frontend/src/pages/HomePage.tsx) that, when tapped, opens a PIN verification modal. The modal should display a 6-digit PIN input (masked). On correct PIN entry (validate against a PIN stored in localStorage or the backend user profile), reveal the bank balance in a compact card overlay or inline section. After 3 consecutive incorrect PIN attempts, lock the modal for 30 seconds and show an error message. The backend should expose a function to store and verify the PIN hash, or use a localStorage-based PIN for client-side verification as a fallback.",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-final"
+          "msg-4"
         ],
         "quotes": [
-          "to link bank account"
+          "to check the bank balance verify by pin"
         ]
       },
       "acceptanceCriteria": [
-        "Hook uses useMutation from React Query",
-        "Mutation calls actor.setBankAccount with the account number",
-        "Invalidates currentUserProfile query on success",
-        "Returns mutation state (loading, error, success)"
+        "A 'Check Balance' button is visible on the Home page",
+        "Tapping the button opens a 6-digit PIN input modal",
+        "Correct PIN reveals the bank balance",
+        "3 wrong attempts lock the modal for 30 seconds with an error message",
+        "Balance is hidden again when the modal is dismissed"
       ]
     },
     {
-      "id": "REQ-23",
-      "text": "Create a custom hook useGetBankAccount at frontend/src/hooks/useGetBankAccount.ts that fetches the linked bank account number using React Query",
+      "id": "REQ-39",
+      "text": "Add a Spending Limits summary section on the Home page (frontend/src/pages/HomePage.tsx), placed below the promotional ads carousel. Fetch the user's spending limits via the existing useSpendingLimits hook and the current month's debit transactions via useTransactions. For each category that has a limit set, display a compact row showing: category name, a progress bar (current spend / limit), and the amount spent vs. the limit. Rows that exceed 80% of the limit should display an amber warning indicator; rows exceeding 100% should display a red over-budget indicator. Show a maximum of 4 categories with a 'View All' link that navigates to the SpendingLimitsPage.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-final"
+          "msg-4"
         ],
         "quotes": [
-          "to link bank account"
+          "spending limits for categories"
         ]
       },
       "acceptanceCriteria": [
-        "Hook uses useQuery from React Query",
-        "Query calls actor.getBankAccount",
-        "Query is enabled only when actor is available",
-        "Returns the linked account number or null"
+        "Spending limits section appears on the Home page below the ads carousel",
+        "Up to 4 categories with limits are displayed as compact progress rows",
+        "Progress bar reflects current month's spend vs. limit",
+        "Amber indicator shown when spend >= 80% of limit",
+        "Red indicator shown when spend > 100% of limit",
+        "'View All' link navigates to SpendingLimitsPage"
       ]
     },
     {
-      "id": "REQ-24",
-      "text": "Add a route for /bank-linking in frontend/src/App.tsx that renders the BankLinkingPage component",
+      "id": "REQ-40",
+      "text": "Add a Challenges & Leaderboard preview section on the Home page (frontend/src/pages/HomePage.tsx), placed below the Spending Limits section. Fetch challenges via the existing useChallenges hook and leaderboard via useLeaderboard. Display up to 2 active (incomplete) challenges as compact cards showing: challenge title, progress indicator, and a 'Complete' button that calls the useCompleteChallenge mutation. Below the challenges, show a mini leaderboard table with the top 3 users (rank, name/principal truncated, digi points). Include a 'View All' link that navigates to the ChallengesPage for both sections.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-final"
+          "msg-4"
         ],
         "quotes": [
-          "to link bank account"
+          "challenges and leader board in home page"
         ]
       },
       "acceptanceCriteria": [
-        "Route is added to the router configuration",
-        "Route is protected by authentication guard",
-        "Route path is '/bank-linking'"
-      ]
-    },
-    {
-      "id": "REQ-25",
-      "text": "Add a navigation button or link on the ProfilePage (frontend/src/pages/ProfilePage.tsx) that directs users to the bank linking page",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-final"
-        ],
-        "quotes": [
-          "to link bank account"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Button or link is clearly labeled (e.g., 'Link Bank Account' or 'Manage Bank Account')",
-        "Clicking navigates to /bank-linking route",
-        "Visual styling matches existing profile page buttons",
-        "Shows linked status if account is already linked"
+        "Challenges & Leaderboard section is visible on the Home page",
+        "Up to 2 active challenges are shown with progress and a Complete button",
+        "Completing a challenge triggers the useCompleteChallenge mutation and shows a success toast",
+        "Top 3 leaderboard entries are displayed with rank, name, and digi points",
+        "'View All' links navigate to ChallengesPage"
       ]
     }
   ],
   "constraints": [
-    "Do not modify frontend/src/hooks/useInternetIdentity.ts or frontend/src/hooks/useActor.ts",
-    "Keep all backend logic within the single main actor file (backend/main.mo)",
-    "Follow existing authentication and access control patterns from the codebase",
-    "Maintain consistency with the purplish-blue theme used throughout the app"
+    "Do not modify files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui",
+    "Reuse existing hooks (useSpendingLimits, useTransactions, useChallenges, useLeaderboard, useCompleteChallenge, useBalance) rather than creating duplicate logic",
+    "The PIN verification for balance check must not expose the raw PIN in plaintext in any network request or log"
   ],
   "nonGoals": [
-    "Actual bank API integration or verification of bank account numbers",
-    "Real-time balance synchronization with external banks",
-    "Support for multiple bank accounts per user",
-    "Encryption or advanced security beyond basic authentication"
+    "Implementing real third-party ad networks or external ad APIs",
+    "Full biometric authentication (fingerprint/Face ID) for PIN verification",
+    "Modifying the SpendingLimitsPage or ChallengesPage layouts",
+    "Adding new backend spending limit or challenge logic beyond what already exists"
   ],
   "imageRequirements": {
-    "required": [],
+    "required": [
+      "Budgeting tips ad banner illustration — abstract coins and a piggy bank with a purple-blue gradient background (ad-budgeting.dim_600x200.png)",
+      "Personal loans ad banner illustration — stylized document and currency notes with a blue-indigo gradient background (ad-loans.dim_600x200.png)",
+      "Investments ad banner illustration — upward trending graph with gold coins and a deep-purple gradient background (ad-investments.dim_600x200.png)",
+      "Credit score ad banner illustration — shield icon with a star rating dial and a teal-purple gradient background (ad-credit-score.dim_600x200.png)",
+      "Student savings ad banner illustration — graduation cap with stacked coins and a violet-blue gradient background (ad-student-savings.dim_600x200.png)"
+    ],
     "edits": []
   }
 }

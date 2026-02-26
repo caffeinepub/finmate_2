@@ -1,163 +1,151 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
+import React, { useState } from 'react';
+import { ArrowLeft, Target, AlertTriangle, CheckCircle } from 'lucide-react';
+import { useNavigate } from '@tanstack/react-router';
 import { useSpendingLimits } from '../hooks/useSpendingLimits';
 import { useSetSpendingLimit } from '../hooks/useSetSpendingLimit';
-import { Progress } from '@/components/ui/progress';
 import { useGetTransactions } from '../hooks/useTransactions';
-import { AlertCircle } from 'lucide-react';
-import { toast } from 'sonner';
+import { filterByMonth } from '../utils/dateFilters';
+import { CATEGORIES } from '../data/categories';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Progress } from '@/components/ui/progress';
+import { Card, CardContent } from '@/components/ui/card';
 
 export default function SpendingLimitsPage() {
+  const navigate = useNavigate();
   const { data: limits = [] } = useSpendingLimits();
   const { data: transactions = [] } = useGetTransactions();
-  const { mutate: setLimit, isPending } = useSetSpendingLimit();
-  const [category, setCategory] = useState('');
-  const [amount, setAmount] = useState('');
+  const setLimit = useSetSpendingLimit();
 
-  const categories = [
-    'grocery',
-    'hostel_expense',
-    'food',
-    'travel',
-    'personal',
-    'clothing',
-    'mobile_recharge',
-  ];
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [limitAmount, setLimitAmount] = useState('');
 
-  const calculateSpending = (cat: string) => {
-    return transactions
-      .filter((t) => t.category === cat && t.type === 'debit')
-      .reduce((sum, t) => sum + t.amount, 0);
-  };
+  const monthlyTransactions = filterByMonth(transactions);
+  const categoryTotals: Record<string, number> = {};
+  monthlyTransactions
+    .filter((t) => t.type === 'debit')
+    .forEach((t) => {
+      categoryTotals[t.category] = (categoryTotals[t.category] || 0) + t.amount;
+    });
 
-  const handleSetLimit = (e: React.FormEvent) => {
+  const handleSetLimit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (category && amount) {
-      setLimit(
-        { category, limit: parseFloat(amount) },
-        {
-          onSuccess: () => {
-            toast.success('Spending limit updated!');
-            setCategory('');
-            setAmount('');
-          },
-        }
-      );
-    }
+    if (!selectedCategory || !limitAmount) return;
+    await setLimit.mutateAsync({ category: selectedCategory, limit: parseFloat(limitAmount) });
+    setSelectedCategory('');
+    setLimitAmount('');
   };
 
   return (
-    <div className="space-y-6">
-      <div className="text-center space-y-2">
-        <h2 className="text-2xl font-bold text-foreground">Spending Limits</h2>
-        <p className="text-muted-foreground">Set budgets to control your expenses</p>
+    <div className="min-h-screen bg-background pb-24">
+      <div className="bg-gradient-to-r from-primary to-secondary px-4 pt-12 pb-6">
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => navigate({ to: '/challenges' })}
+            className="p-2 rounded-full bg-white/20 text-white hover:bg-white/30 transition-all"
+          >
+            <ArrowLeft size={20} />
+          </button>
+          <div>
+            <h1 className="text-white font-bold text-xl">Spending Limits</h1>
+            <p className="text-white/70 text-sm">Set monthly budgets per category</p>
+          </div>
+        </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Set New Limit</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSetLimit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
-              <select
-                id="category"
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full h-10 px-3 rounded-md border border-input bg-background"
-                disabled={isPending}
+      <div className="px-4 py-4 space-y-4">
+        {/* Set Limit Form */}
+        <Card>
+          <CardContent className="p-4">
+            <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+              <Target size={16} className="text-primary" />
+              Set New Limit
+            </h3>
+            <form onSubmit={handleSetLimit} className="space-y-3">
+              <div>
+                <Label>Category</Label>
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="mt-1">
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CATEGORIES.map((cat) => (
+                      <SelectItem key={cat} value={cat}>
+                        {cat}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label>Monthly Limit (₹)</Label>
+                <Input
+                  type="number"
+                  placeholder="e.g. 5000"
+                  value={limitAmount}
+                  onChange={(e) => setLimitAmount(e.target.value)}
+                  min="0"
+                  className="mt-1"
+                />
+              </div>
+              <Button
+                type="submit"
+                disabled={setLimit.isPending || !selectedCategory || !limitAmount}
+                className="w-full bg-gradient-to-r from-primary to-secondary text-white"
               >
-                <option value="">Select category</option>
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="amount">Monthly Limit (₹)</Label>
-              <Input
-                id="amount"
-                type="number"
-                step="0.01"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                disabled={isPending}
-                placeholder="0.00"
-              />
-            </div>
-            <Button
-              type="submit"
-              disabled={isPending || !category || !amount}
-              className="w-full bg-gradient-to-r from-[oklch(0.55_0.18_280)] to-[oklch(0.45_0.15_260)] hover:from-[oklch(0.60_0.20_280)] hover:to-[oklch(0.50_0.17_260)] text-white"
-            >
-              Set Limit
-            </Button>
-          </form>
-        </CardContent>
-      </Card>
+                {setLimit.isPending ? 'Saving...' : 'Set Limit'}
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
 
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-foreground">Current Limits</h3>
-        {limits.length === 0 ? (
-          <Card>
-            <CardContent className="p-6 text-center text-muted-foreground">
-              No spending limits set yet
-            </CardContent>
-          </Card>
-        ) : (
-          limits.map((limit) => {
-            const spent = calculateSpending(limit.category);
-            const percentage = (spent / limit.limit) * 100;
-            const isOverLimit = percentage > 100;
-            const isNearLimit = percentage > 80 && percentage <= 100;
+        {/* Current Limits */}
+        {limits.length > 0 && (
+          <div className="space-y-3">
+            <h3 className="font-semibold text-foreground">Current Limits</h3>
+            {limits.map((limit) => {
+              const spent = categoryTotals[limit.category] || 0;
+              const percentage = Math.min((spent / limit.limit) * 100, 100);
+              const isOver = spent > limit.limit;
 
-            return (
-              <Card key={limit.category}>
-                <CardContent className="p-6">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-semibold text-foreground">
-                        {limit.category.replace('_', ' ').replace(/\b\w/g, (l) => l.toUpperCase())}
-                      </h4>
-                      <span className="text-sm text-muted-foreground">
-                        ₹{spent.toFixed(2)} / ₹{limit.limit.toFixed(2)}
+              return (
+                <Card key={limit.category}>
+                  <CardContent className="p-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        {isOver ? (
+                          <AlertTriangle size={16} className="text-red-500" />
+                        ) : (
+                          <CheckCircle size={16} className="text-green-500" />
+                        )}
+                        <span className="font-medium text-sm text-foreground">
+                          {limit.category}
+                        </span>
+                      </div>
+                      <span
+                        className={`text-sm font-semibold ${
+                          isOver ? 'text-red-500' : 'text-foreground'
+                        }`}
+                      >
+                        ₹{spent.toFixed(0)} / ₹{limit.limit.toFixed(0)}
                       </span>
                     </div>
                     <Progress
-                      value={Math.min(percentage, 100)}
-                      className={`h-2 ${
-                        isOverLimit
-                          ? '[&>div]:bg-red-500'
-                          : isNearLimit
-                          ? '[&>div]:bg-yellow-500'
-                          : '[&>div]:bg-green-500'
-                      }`}
+                      value={percentage}
+                      className={`h-2 ${isOver ? '[&>div]:bg-red-500' : '[&>div]:bg-primary'}`}
                     />
-                    {(isOverLimit || isNearLimit) && (
-                      <div
-                        className={`flex items-center gap-2 text-sm ${
-                          isOverLimit ? 'text-red-600' : 'text-yellow-600'
-                        }`}
-                      >
-                        <AlertCircle className="w-4 h-4" />
-                        <span>
-                          {isOverLimit
-                            ? 'Limit exceeded!'
-                            : 'Approaching limit'}
-                        </span>
-                      </div>
+                    {isOver && (
+                      <p className="text-xs text-red-500 mt-1">
+                        Over by ₹{(spent - limit.limit).toFixed(0)}
+                      </p>
                     )}
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
         )}
       </div>
     </div>

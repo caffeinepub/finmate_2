@@ -1,91 +1,109 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add bank account linking functionality",
+  "title": "Replace bank balance with ads, add PIN-verified balance check, and surface spending limits, challenges & leaderboard on Home page",
   "requirements": [
     {
-      "id": "REQ-21",
-      "summary": "Create BankLinkingPage component with form to input and submit bank account number",
+      "id": "REQ-37",
+      "summary": "Replace BankBalanceCard with promotional ads carousel on Home page",
       "acceptanceCriteria": [
-        "Page includes a form with an input field for bank account number",
-        "Form validates that account number is not empty before submission",
-        "Submit button triggers the backend setBankAccount function",
-        "Shows success message on successful linking",
-        "Shows error message if linking fails",
-        "Displays current linked account number if one exists"
+        "BankBalanceCard is no longer visible on the Home page",
+        "A carousel of at least 5 promotional ad cards is shown in its place",
+        "Ad categories include Budgeting, Loans, and Investments at minimum",
+        "Carousel auto-scrolls every 4 seconds",
+        "Dot indicators reflect current card position",
+        "Cards follow the purple-blue theme with gradient styling"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/BankLinkingPage.tsx",
+          "path": "frontend/src/components/PromotionalAdsCarousel.tsx",
           "operation": "create",
-          "description": "Create a new page component that displays a form for linking a bank account. The page should fetch the current linked bank account using useGetBankAccount hook, display it if it exists, and provide a form with an input field for bank account number. Use the useSetBankAccount hook to submit the account number. Show success/error toasts using shadcn/ui toast component. Style the form consistently with the purplish-blue theme used throughout the app. Include input validation to ensure the account number is not empty before submission."
-        }
-      ]
-    },
-    {
-      "id": "REQ-22",
-      "summary": "Create useSetBankAccount hook that wraps setBankAccount as a React Query mutation",
-      "acceptanceCriteria": [
-        "Hook uses useMutation from React Query",
-        "Mutation calls actor.setBankAccount with the account number",
-        "Invalidates currentUserProfile query on success",
-        "Returns mutation state (loading, error, success)"
-      ],
-      "file_operations": [
+          "description": "Create a horizontally scrollable promotional ads carousel component that displays ad cards for Budgeting Tips, Personal Loans, Mutual Fund Investments, Credit Score Improvement, and Student Savings Plans. Each card should show a title, short description, a generated image (from frontend/public/assets/generated/ad-*.dim_600x200.png), a CTA button, and use purple-blue gradient backgrounds matching the app theme. Implement auto-scroll functionality (every 4 seconds), manual swipe/click navigation, and dot indicators to show the current position. Use the generated images: frontend/public/assets/generated/ad-budgeting.dim_600x200.png, frontend/public/assets/generated/ad-loans.dim_600x200.png, frontend/public/assets/generated/ad-investments.dim_600x200.png, frontend/public/assets/generated/ad-credit-score.dim_600x200.png, and frontend/public/assets/generated/ad-student-savings.dim_600x200.png as the card backgrounds or inline images."
+        },
         {
-          "path": "frontend/src/hooks/useSetBankAccount.ts",
-          "operation": "create",
-          "description": "Create a custom React Query mutation hook that wraps the actor.setBankAccount function. The hook should use useMutation from @tanstack/react-query, call actor.setBankAccount with the provided bank account number as a string parameter, and invalidate the 'currentUserProfile' query on success using queryClient.invalidateQueries. Return the standard mutation state including isLoading, isError, isSuccess, and error properties. Follow the same pattern as useAddTransaction and useCompleteChallenge hooks."
-        }
-      ]
-    },
-    {
-      "id": "REQ-23",
-      "summary": "Create useGetBankAccount hook that fetches the linked bank account number",
-      "acceptanceCriteria": [
-        "Hook uses useQuery from React Query",
-        "Query calls actor.getBankAccount",
-        "Query is enabled only when actor is available",
-        "Returns the linked account number or null"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useGetBankAccount.ts",
-          "operation": "create",
-          "description": "Create a custom React Query hook that fetches the linked bank account number using the actor.getBankAccount function. Use useQuery from @tanstack/react-query with queryKey 'bankAccount'. Enable the query only when actor is available and not fetching (enabled: !!actor && !actorFetching). The query should return string | null based on the backend interface. Follow the same pattern as useBalance and useGetCallerUserProfile hooks, including proper handling of actor loading state."
-        }
-      ]
-    },
-    {
-      "id": "REQ-24",
-      "summary": "Add route for /bank-linking in App.tsx that renders BankLinkingPage",
-      "acceptanceCriteria": [
-        "Route is added to the router configuration",
-        "Route is protected by authentication guard",
-        "Route path is '/bank-linking'"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/App.tsx",
+          "path": "frontend/src/pages/HomePage.tsx",
           "operation": "modify",
-          "description": "Add a new route configuration for '/bank-linking' path that renders the BankLinkingPage component. Import BankLinkingPage from './pages/BankLinkingPage'. Place the route within the Layout component alongside other authenticated routes like ProfilePage, HistoryPage, etc. Ensure the route is protected by the existing authentication guard that checks isAuthenticated. Follow the same pattern as other page routes in the file."
+          "description": "Remove the BankBalanceCard component import and usage. Replace it with the PromotionalAdsCarousel component, positioning it at the top of the main content area before the QR scanner button and quick actions. Ensure the carousel takes up appropriate horizontal space and maintains spacing consistency with other page elements."
         }
       ]
     },
     {
-      "id": "REQ-25",
-      "summary": "Add navigation button on ProfilePage to direct users to bank linking page",
+      "id": "REQ-38",
+      "summary": "Add PIN-verified balance check button and modal on Home page",
       "acceptanceCriteria": [
-        "Button or link is clearly labeled (e.g., 'Link Bank Account' or 'Manage Bank Account')",
-        "Clicking navigates to /bank-linking route",
-        "Visual styling matches existing profile page buttons",
-        "Shows linked status if account is already linked"
+        "A 'Check Balance' button is visible on the Home page",
+        "Tapping the button opens a 6-digit PIN input modal",
+        "Correct PIN reveals the bank balance",
+        "3 wrong attempts lock the modal for 30 seconds with an error message",
+        "Balance is hidden again when the modal is dismissed"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/ProfilePage.tsx",
+          "path": "frontend/src/components/PinVerificationModal.tsx",
+          "operation": "create",
+          "description": "Create a modal component for PIN verification that displays a 6-digit masked input field. Implement client-side PIN validation by comparing the entered PIN hash with a stored PIN hash retrieved from localStorage. Track consecutive incorrect attempts (max 3) and lock the modal for 30 seconds after 3 failed attempts, displaying an error message. On successful PIN verification, emit a success event or callback to the parent component to reveal the balance. Include a close button that dismisses the modal and resets the attempt counter."
+        },
+        {
+          "path": "frontend/src/hooks/usePinVerification.ts",
+          "operation": "create",
+          "description": "Create a custom hook that manages PIN verification state, including: storing and retrieving the PIN hash from localStorage, validating entered PIN by comparing hashes, tracking failed attempt count and lockout state with a 30-second timer, and resetting state after successful verification or modal dismissal. Expose functions to set the initial PIN (first-time setup), verify PIN, check lockout status, and reset attempts."
+        },
+        {
+          "path": "frontend/src/components/BalanceRevealCard.tsx",
+          "operation": "create",
+          "description": "Create a compact card component that displays the user's bank balance (fetched via useBalance hook) in a gradient-styled overlay or inline section. The card should only render when balance is successfully retrieved and should include a dismiss/hide button. Use the existing purple-blue theme with gradient styling to match the app aesthetic."
+        },
+        {
+          "path": "frontend/src/pages/HomePage.tsx",
           "operation": "modify",
-          "description": "Add a navigation button or link that directs users to the bank linking page at '/bank-linking'. Use the useGetBankAccount hook to fetch the current linked bank account status. If a bank account is linked, display a button labeled 'Manage Bank Account' with an indicator showing the linked status. If no account is linked, label the button 'Link Bank Account'. Use Link from @tanstack/react-router for navigation. Style the button consistently with the existing navigation buttons (Settings, Referral Program) on the profile page, maintaining the purplish-blue theme. Position the button in the account settings section alongside the existing navigation buttons."
+          "description": "Add a 'Check Balance' button below the PromotionalAdsCarousel. Wire the button to open the PinVerificationModal component. On successful PIN verification, display the BalanceRevealCard showing the user's balance. Handle modal dismissal by hiding the balance card and resetting PIN verification state. Import and use the usePinVerification hook to manage PIN state and the useBalance hook to fetch balance data."
+        }
+      ]
+    },
+    {
+      "id": "REQ-39",
+      "summary": "Add Spending Limits summary section on Home page",
+      "acceptanceCriteria": [
+        "Spending limits section appears on the Home page below the ads carousel",
+        "Up to 4 categories with limits are displayed as compact progress rows",
+        "Progress bar reflects current month's spend vs. limit",
+        "Amber indicator shown when spend >= 80% of limit",
+        "Red indicator shown when spend > 100% of limit",
+        "'View All' link navigates to SpendingLimitsPage"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/SpendingLimitsSummary.tsx",
+          "operation": "create",
+          "description": "Create a component that fetches spending limits via useSpendingLimits and current month's debit transactions via useTransactions (filtered by 30-day period). For each category with a limit, calculate the current month's spend by summing debit transactions in that category. Display up to 4 categories as compact rows, each showing: category name, a progress bar (current spend / limit), and the amount spent vs. the limit (e.g., '₹5,000 / ₹10,000'). Apply an amber warning indicator (border or icon) when spend >= 80% of limit, and a red over-budget indicator when spend > 100% of limit. Include a 'View All' link at the bottom that navigates to /spending-limits using TanStack Router's Link component."
+        },
+        {
+          "path": "frontend/src/pages/HomePage.tsx",
+          "operation": "modify",
+          "description": "Add the SpendingLimitsSummary component below the PromotionalAdsCarousel and PIN-verified balance section. Ensure proper spacing and section separation using the existing layout utilities."
+        }
+      ]
+    },
+    {
+      "id": "REQ-40",
+      "summary": "Add Challenges & Leaderboard preview section on Home page",
+      "acceptanceCriteria": [
+        "Challenges & Leaderboard section is visible on the Home page",
+        "Up to 2 active challenges are shown with progress and a Complete button",
+        "Completing a challenge triggers the useCompleteChallenge mutation and shows a success toast",
+        "Top 3 leaderboard entries are displayed with rank, name, and digi points",
+        "'View All' links navigate to ChallengesPage"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/ChallengesLeaderboardPreview.tsx",
+          "operation": "create",
+          "description": "Create a component that fetches challenges via useChallenges and leaderboard via useLeaderboard. Display up to 2 active (incomplete) challenges as compact cards showing: challenge title, a progress indicator (if applicable), and a 'Complete' button. Wire the Complete button to call the useCompleteChallenge mutation with the challenge ID; on success, the mutation already invalidates queries and shows a toast. Below the challenges, render a mini leaderboard table showing the top 3 users with columns for rank (1, 2, 3), name (or truncated principal if name unavailable), and digi points. Include a 'View All' link at the bottom that navigates to /challenges using TanStack Router's Link component."
+        },
+        {
+          "path": "frontend/src/pages/HomePage.tsx",
+          "operation": "modify",
+          "description": "Add the ChallengesLeaderboardPreview component below the SpendingLimitsSummary section. Ensure proper spacing and that all new sections fit within the scrollable content area of the home page without overlapping the bottom navigation."
         }
       ]
     }
