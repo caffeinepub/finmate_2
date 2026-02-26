@@ -1,0 +1,284 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 7,
+  "summary": "Mobile budgeting app for students with gamification, expense tracking, AI-powered categorization, payment integration, and analytics",
+  "architectural_notes": [
+    "Mobile app targeting student users exclusively",
+    "AI-powered automatic transaction categorization engine required",
+    "Real payment processing integration needed (QR, phone number, scanner)",
+    "Bank account linking API integration for balance and transactions",
+    "Dual AI chatbot system: general assistance + analytics-focused",
+    "Gamification backend for points, challenges, and leaderboard",
+    "Purplish-blue theme with PhonePe-style UI patterns"
+  ],
+  "known_issues": [],
+  "isFixRequest": true,
+  "existing_features": [
+    {
+      "id": "feature-create-user-authentication-system-using-internet-identity-for-secure-student-access",
+      "title": "Create user authentication system using Internet Identity for secure student access",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-gamification-system-with-challenges-saving-goals-digi-points-reward-mechanism-and-leaderboard-tracking-user-rankings-based-on-savings-achievements",
+      "title": "Create gamification system with challenges (saving goals), digi points reward mechanism, and leaderboard tracking user rankings based on savings achievements",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-spending-limit-feature-allowing-students-to-set-budget-caps-per-category-or-overall-with-alerts-when-approaching-or-exceeding-limits",
+      "title": "Build spending limit feature allowing students to set budget caps per category or overall, with alerts when approaching or exceeding limits",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-transaction-history-view-with-filtering-by-weekly-monthly-and-yearly-periods-showing-date-time-amount-category-and-credit-debit-indicator",
+      "title": "Implement transaction history view with filtering by weekly, monthly, and yearly periods, showing date/time, amount, category, and credit/debit indicator",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-analytics-dashboard-with-graphs-showing-category-wise-spending-breakdown-income-vs-expense-trends-and-time-based-analysis-weekly-monthly-yearly",
+      "title": "Create analytics dashboard with graphs showing category-wise spending breakdown, income vs expense trends, and time-based analysis (weekly, monthly, yearly)",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-integrate-bank-account-display-showing-current-balance-similar-to-phonepe-interface",
+      "title": "Integrate bank account display showing current balance similar to PhonePe interface",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-qr-code-scanner-functionality-on-home-page-for-payment-processing-supporting-payment-via-scanned-qr-codes-or-phone-numbers",
+      "title": "Implement QR code scanner functionality on home page for payment processing, supporting payment via scanned QR codes or phone numbers",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-ai-chatbot-interface-for-general-assistance-with-budgeting-queries-and-financial-guidance",
+      "title": "Create AI chatbot interface for general assistance with budgeting queries and financial guidance",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-dedicated-ai-chatbot-in-the-analytical-page-to-provide-insights-and-explanations-about-spending-patterns-and-financial-data",
+      "title": "Add dedicated AI chatbot in the analytical page to provide insights and explanations about spending patterns and financial data",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-refer-and-earn-program-allowing-users-to-invite-friends-and-earn-rewards-with-tracking-of-referral-points",
+      "title": "Implement refer and earn program allowing users to invite friends and earn rewards, with tracking of referral points",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-offers-section-displaying-available-deals-discounts-and-promotional-content-relevant-to-students",
+      "title": "Create offers section displaying available deals, discounts, and promotional content relevant to students",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-design-dashboard-with-purplish-blue-theme-featuring-home-icon-history-icon-bank-balance-display-and-scanner-icon-following-modern-mobile-app-conventions",
+      "title": "Design dashboard with purplish-blue theme featuring home icon, history icon, bank balance display, and scanner icon, following modern mobile app conventions",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-investigate-and-fix-visual-glitching-issues-on-the-login-page-frontend-src-pages-loginpage-tsx-ensuring-smooth-rendering-of-the-finmate-logo-login-button-loading-states-and-feature-highlights-without-layout-shifts-flickering-or-animation-artifacts",
+      "title": "Investigate and fix visual glitching issues on the login page (frontend/src/pages/LoginPage.tsx), ensuring smooth rendering of the FinMate logo, login button, loading states, and feature highlights without layout shifts, flickering, or animation artifacts",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-banklinkingpage-component-at-frontend-src-pages-banklinkingpage-tsx-with-a-form-to-input-and-submit-a-bank-account-number",
+      "title": "Create a BankLinkingPage component at frontend/src/pages/BankLinkingPage.tsx with a form to input and submit a bank account number",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-custom-hook-usesetbankaccount-at-frontend-src-hooks-usesetbankaccount-ts-that-wraps-the-backend-setbankaccount-function-as-a-react-query-mutation",
+      "title": "Create a custom hook useSetBankAccount at frontend/src/hooks/useSetBankAccount.ts that wraps the backend setBankAccount function as a React Query mutation",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-custom-hook-usegetbankaccount-at-frontend-src-hooks-usegetbankaccount-ts-that-fetches-the-linked-bank-account-number-using-react-query",
+      "title": "Create a custom hook useGetBankAccount at frontend/src/hooks/useGetBankAccount.ts that fetches the linked bank account number using React Query",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-route-for-bank-linking-in-frontend-src-app-tsx-that-renders-the-banklinkingpage-component",
+      "title": "Add a route for /bank-linking in frontend/src/App.tsx that renders the BankLinkingPage component",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-navigation-button-or-link-on-the-profilepage-frontend-src-pages-profilepage-tsx-that-directs-users-to-the-bank-linking-page",
+      "title": "Add a navigation button or link on the ProfilePage (frontend/src/pages/ProfilePage.tsx) that directs users to the bank linking page",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Gamification system with leaderboard, challenges, and digi points for saving goals",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Spending limit setting and tracking expenses with automatic AI categorization",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Expense categories: grocery, hostel, food, travel, personal, clothing, mobile recharge, and custom options",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Transaction history with date/time, credit/debit indicator, filterable by weekly/monthly/yearly",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Category-wise analysis with graphs and automatic income/expense analysis",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Bank account linking with security features and balance display like PhonePe",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Payment functionality: QR code scanner, phone number transfer, actual payment processing",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "AI chatbot for general assistance and another AI chatbot in analytical page",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Refer and earn program with offers section",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Dashboard with purplish-blue theme, home icon, history, bank balance, and scanner icon on home page",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Implement backend data model for user profiles storing student information, digi points balance, spending limits, and linked bank account status",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Create transaction data model with fields for amount, type (credit/debit), category (grocery, hostel expense, food, travel, personal, clothing, mobile recharge, and custom categories), timestamp, description, and payment method",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Implement AI-powered transaction categorization that automatically assigns categories to transactions based on description and amount patterns",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-26",
+      "summary": "Add mobile recharge category as a transaction type with dedicated UI for initiating recharge payments",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-27",
+      "summary": "Add a bank account number field to the UserProfile type in backend/main.mo to store the linked bank account number as optional Text",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-28",
+      "summary": "Create a backend function setBankAccount that accepts a bank account number as Text and updates the caller's profile with this account number",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-29",
+      "summary": "Create a backend query function getBankAccount that returns the caller's linked bank account number if set, otherwise returns null",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "FinMate",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

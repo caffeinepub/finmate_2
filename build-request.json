@@ -1,0 +1,175 @@
+{
+  "kind": "build_request",
+  "title": "Add bank account linking functionality",
+  "projectName": "FinMate",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-18",
+      "text": "Add a bank account number field to the UserProfile type in backend/main.mo to store the linked bank account number as optional Text",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ],
+        "quotes": [
+          "to link bank account"
+        ]
+      },
+      "acceptanceCriteria": [
+        "UserProfile type includes an optional bankAccountNumber field of type ?Text",
+        "Field is initialized as null for new profiles",
+        "Existing profiles can be updated with a bank account number"
+      ]
+    },
+    {
+      "id": "REQ-19",
+      "text": "Create a backend function setBankAccount that accepts a bank account number as Text and updates the caller's profile with this account number",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ],
+        "quotes": [
+          "to link bank account"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Function validates that the caller has an existing profile",
+        "Function updates the bankAccountNumber field in the user's profile",
+        "Function returns a success/error result type",
+        "Access control ensures only the profile owner can update their account"
+      ]
+    },
+    {
+      "id": "REQ-20",
+      "text": "Create a backend query function getBankAccount that returns the caller's linked bank account number if set, otherwise returns null",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ],
+        "quotes": [
+          "to link bank account"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Function retrieves the bankAccountNumber from the caller's profile",
+        "Returns ?Text type (null if no account linked)",
+        "Only returns data for the authenticated caller"
+      ]
+    },
+    {
+      "id": "REQ-21",
+      "text": "Create a BankLinkingPage component at frontend/src/pages/BankLinkingPage.tsx with a form to input and submit a bank account number",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ],
+        "quotes": [
+          "to link bank account"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Page includes a form with an input field for bank account number",
+        "Form validates that account number is not empty before submission",
+        "Submit button triggers the backend setBankAccount function",
+        "Shows success message on successful linking",
+        "Shows error message if linking fails",
+        "Displays current linked account number if one exists"
+      ]
+    },
+    {
+      "id": "REQ-22",
+      "text": "Create a custom hook useSetBankAccount at frontend/src/hooks/useSetBankAccount.ts that wraps the backend setBankAccount function as a React Query mutation",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ],
+        "quotes": [
+          "to link bank account"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Hook uses useMutation from React Query",
+        "Mutation calls actor.setBankAccount with the account number",
+        "Invalidates currentUserProfile query on success",
+        "Returns mutation state (loading, error, success)"
+      ]
+    },
+    {
+      "id": "REQ-23",
+      "text": "Create a custom hook useGetBankAccount at frontend/src/hooks/useGetBankAccount.ts that fetches the linked bank account number using React Query",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ],
+        "quotes": [
+          "to link bank account"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Hook uses useQuery from React Query",
+        "Query calls actor.getBankAccount",
+        "Query is enabled only when actor is available",
+        "Returns the linked account number or null"
+      ]
+    },
+    {
+      "id": "REQ-24",
+      "text": "Add a route for /bank-linking in frontend/src/App.tsx that renders the BankLinkingPage component",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ],
+        "quotes": [
+          "to link bank account"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Route is added to the router configuration",
+        "Route is protected by authentication guard",
+        "Route path is '/bank-linking'"
+      ]
+    },
+    {
+      "id": "REQ-25",
+      "text": "Add a navigation button or link on the ProfilePage (frontend/src/pages/ProfilePage.tsx) that directs users to the bank linking page",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-final"
+        ],
+        "quotes": [
+          "to link bank account"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Button or link is clearly labeled (e.g., 'Link Bank Account' or 'Manage Bank Account')",
+        "Clicking navigates to /bank-linking route",
+        "Visual styling matches existing profile page buttons",
+        "Shows linked status if account is already linked"
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify frontend/src/hooks/useInternetIdentity.ts or frontend/src/hooks/useActor.ts",
+    "Keep all backend logic within the single main actor file (backend/main.mo)",
+    "Follow existing authentication and access control patterns from the codebase",
+    "Maintain consistency with the purplish-blue theme used throughout the app"
+  ],
+  "nonGoals": [
+    "Actual bank API integration or verification of bank account numbers",
+    "Real-time balance synchronization with external banks",
+    "Support for multiple bank accounts per user",
+    "Encryption or advanced security beyond basic authentication"
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-create-a-banklinkingpage-component-at-frontend-src-pages-banklinkingpage-tsx-with-a-form-to-input-and-submit-a-bank-account-number",
+      "featureTitle": "Create a BankLinkingPage component at frontend/src/pages/BankLinkingPage.tsx with a form to input and submit a bank account number",
+      "files": [
+        "frontend/src/pages/BankLinkingPage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-21"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-a-custom-hook-usesetbankaccount-at-frontend-src-hooks-usesetbankaccount-ts-that-wraps-the-backend-setbankaccount-function-as-a-react-query-mutation",
+      "featureTitle": "Create a custom hook useSetBankAccount at frontend/src/hooks/useSetBankAccount.ts that wraps the backend setBankAccount function as a React Query mutation",
+      "files": [
+        "frontend/src/hooks/useSetBankAccount.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-22"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-create-a-custom-hook-usegetbankaccount-at-frontend-src-hooks-usegetbankaccount-ts-that-fetches-the-linked-bank-account-number-using-react-query",
+      "featureTitle": "Create a custom hook useGetBankAccount at frontend/src/hooks/useGetBankAccount.ts that fetches the linked bank account number using React Query",
+      "files": [
+        "frontend/src/hooks/useGetBankAccount.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-23"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-route-for-bank-linking-in-frontend-src-app-tsx-that-renders-the-banklinkingpage-component",
+      "featureTitle": "Add a route for /bank-linking in frontend/src/App.tsx that renders the BankLinkingPage component",
+      "files": [
+        "frontend/src/App.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-24"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-navigation-button-or-link-on-the-profilepage-frontend-src-pages-profilepage-tsx-that-directs-users-to-the-bank-linking-page",
+      "featureTitle": "Add a navigation button or link on the ProfilePage (frontend/src/pages/ProfilePage.tsx) that directs users to the bank linking page",
+      "files": [
+        "frontend/src/pages/ProfilePage.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-25"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

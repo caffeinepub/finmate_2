@@ -1,0 +1,93 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Add bank account linking functionality",
+  "requirements": [
+    {
+      "id": "REQ-21",
+      "summary": "Create BankLinkingPage component with form to input and submit bank account number",
+      "acceptanceCriteria": [
+        "Page includes a form with an input field for bank account number",
+        "Form validates that account number is not empty before submission",
+        "Submit button triggers the backend setBankAccount function",
+        "Shows success message on successful linking",
+        "Shows error message if linking fails",
+        "Displays current linked account number if one exists"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/BankLinkingPage.tsx",
+          "operation": "create",
+          "description": "Create a new page component that displays a form for linking a bank account. The page should fetch the current linked bank account using useGetBankAccount hook, display it if it exists, and provide a form with an input field for bank account number. Use the useSetBankAccount hook to submit the account number. Show success/error toasts using shadcn/ui toast component. Style the form consistently with the purplish-blue theme used throughout the app. Include input validation to ensure the account number is not empty before submission."
+        }
+      ]
+    },
+    {
+      "id": "REQ-22",
+      "summary": "Create useSetBankAccount hook that wraps setBankAccount as a React Query mutation",
+      "acceptanceCriteria": [
+        "Hook uses useMutation from React Query",
+        "Mutation calls actor.setBankAccount with the account number",
+        "Invalidates currentUserProfile query on success",
+        "Returns mutation state (loading, error, success)"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useSetBankAccount.ts",
+          "operation": "create",
+          "description": "Create a custom React Query mutation hook that wraps the actor.setBankAccount function. The hook should use useMutation from @tanstack/react-query, call actor.setBankAccount with the provided bank account number as a string parameter, and invalidate the 'currentUserProfile' query on success using queryClient.invalidateQueries. Return the standard mutation state including isLoading, isError, isSuccess, and error properties. Follow the same pattern as useAddTransaction and useCompleteChallenge hooks."
+        }
+      ]
+    },
+    {
+      "id": "REQ-23",
+      "summary": "Create useGetBankAccount hook that fetches the linked bank account number",
+      "acceptanceCriteria": [
+        "Hook uses useQuery from React Query",
+        "Query calls actor.getBankAccount",
+        "Query is enabled only when actor is available",
+        "Returns the linked account number or null"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useGetBankAccount.ts",
+          "operation": "create",
+          "description": "Create a custom React Query hook that fetches the linked bank account number using the actor.getBankAccount function. Use useQuery from @tanstack/react-query with queryKey 'bankAccount'. Enable the query only when actor is available and not fetching (enabled: !!actor && !actorFetching). The query should return string | null based on the backend interface. Follow the same pattern as useBalance and useGetCallerUserProfile hooks, including proper handling of actor loading state."
+        }
+      ]
+    },
+    {
+      "id": "REQ-24",
+      "summary": "Add route for /bank-linking in App.tsx that renders BankLinkingPage",
+      "acceptanceCriteria": [
+        "Route is added to the router configuration",
+        "Route is protected by authentication guard",
+        "Route path is '/bank-linking'"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Add a new route configuration for '/bank-linking' path that renders the BankLinkingPage component. Import BankLinkingPage from './pages/BankLinkingPage'. Place the route within the Layout component alongside other authenticated routes like ProfilePage, HistoryPage, etc. Ensure the route is protected by the existing authentication guard that checks isAuthenticated. Follow the same pattern as other page routes in the file."
+        }
+      ]
+    },
+    {
+      "id": "REQ-25",
+      "summary": "Add navigation button on ProfilePage to direct users to bank linking page",
+      "acceptanceCriteria": [
+        "Button or link is clearly labeled (e.g., 'Link Bank Account' or 'Manage Bank Account')",
+        "Clicking navigates to /bank-linking route",
+        "Visual styling matches existing profile page buttons",
+        "Shows linked status if account is already linked"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/ProfilePage.tsx",
+          "operation": "modify",
+          "description": "Add a navigation button or link that directs users to the bank linking page at '/bank-linking'. Use the useGetBankAccount hook to fetch the current linked bank account status. If a bank account is linked, display a button labeled 'Manage Bank Account' with an indicator showing the linked status. If no account is linked, label the button 'Link Bank Account'. Use Link from @tanstack/react-router for navigation. Style the button consistently with the existing navigation buttons (Settings, Referral Program) on the profile page, maintaining the purplish-blue theme. Position the button in the account settings section alongside the existing navigation buttons."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,113 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-23T13:48:59.461Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 8,
+    "implemented": 5,
+    "items": [
+      {
+        "id": "REQ-18",
+        "summary": "Add a bank account number field to the UserProfile type in backend/main.mo to store the linked bank account number as optional Text",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-19",
+        "summary": "Create a backend function setBankAccount that accepts a bank account number as Text and updates the caller's profile with this account number",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-20",
+        "summary": "Create a backend query function getBankAccount that returns the caller's linked bank account number if set, otherwise returns null",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-21",
+        "summary": "Create a BankLinkingPage component at frontend/src/pages/BankLinkingPage.tsx with a form to input and submit a bank account number",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/BankLinkingPage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/BankLinkingPage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-22",
+        "summary": "Create a custom hook useSetBankAccount at frontend/src/hooks/useSetBankAccount.ts that wraps the backend setBankAccount function as a React Query mutation",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useSetBankAccount.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useSetBankAccount.ts"
+        ]
+      },
+      {
+        "id": "REQ-23",
+        "summary": "Create a custom hook useGetBankAccount at frontend/src/hooks/useGetBankAccount.ts that fetches the linked bank account number using React Query",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useGetBankAccount.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useGetBankAccount.ts"
+        ]
+      },
+      {
+        "id": "REQ-24",
+        "summary": "Add a route for /bank-linking in frontend/src/App.tsx that renders the BankLinkingPage component",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/App.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-25",
+        "summary": "Add a navigation button or link on the ProfilePage (frontend/src/pages/ProfilePage.tsx) that directs users to the bank linking page",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/ProfilePage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/ProfilePage.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/ProfileSetupModal.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useGetBankAccount.ts",
+    "frontend/src/hooks/useSetBankAccount.ts",
+    "frontend/src/pages/BankLinkingPage.tsx",
+    "frontend/src/pages/ProfilePage.tsx",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}
